@@ -1,4 +1,4 @@
-import { createId } from './helpers/helper_functions.js';
+import { createRandomId, createId } from './helpers/helper_functions.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 const app = express();
@@ -19,16 +19,11 @@ app.get('/envelopes/:id', (req, res) => {
     let idFound = false;
 
     for (let i = 0; i < envelopes.length; i++) {
-        console.log(envelopes[i].id);
-        console.log(id);
-        if (envelopes[i].id === id) {
+        if (envelopes[i].id.toString() === id) {
            idFound = true;
            res.status(200).json(envelopes[i]);
-           console.log(idFound);
         }
     }
-
-    console.log(idFound);
 
     if (!idFound) {
         res.status(404).json({ error: "Envelope not found!" });
@@ -37,15 +32,10 @@ app.get('/envelopes/:id', (req, res) => {
 
 app.post('/envelopes', (req, res) => {
     let idExists = true;
-
-    let id = 0;
     let title = req.body.title;
     let budget = req.body.budget;
 
-    do {
-        id = createId(1000, 9999);
-        idExists = envelopes.some(id => envelopes.id === id);
-    } while(idExists);
+    let id = createId();
 
     if (typeof title === 'string' && typeof budget === 'number') {
         let envelopeObject = {

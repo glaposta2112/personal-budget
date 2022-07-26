@@ -1,3 +1,5 @@
+let idArray = [0];
+
 function createGuid() {  
     function _p8(s) {  
        var p = (Math.random().toString(16)+"000000000").substr(2,8);  
@@ -6,11 +8,18 @@ function createGuid() {
     return _p8() + _p8(true) + _p8(true) + _p8();  
  }
  
- function createId(min, max) {
+ function createRandomId(min, max) {
    return Math.floor(Math.random() * (max - min + 1)) + min;
+ }
+
+ function createId() {
+   let newNumber = idArray[idArray.length - 1] + 1;
+   idArray.push(newNumber);
+   return newNumber;
  }
 
  export {
    createGuid,
-   createId
+   createId,
+   createRandomId
 };
