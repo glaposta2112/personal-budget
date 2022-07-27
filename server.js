@@ -49,7 +49,36 @@ app.post('/envelopes', (req, res) => {
     }
 });
 
-app.put('/envelopes/:id', (req, res) => {
+app.post('/envelopes/transfer/:from/:to', (req, res) => {
+    let transferAmount = req.body.transfer;
+    let transferFrom = req.params.from;
+    let transferTo = req.params.to;
+    let titleFound = false;
+
+    for (let i = 0; i < envelopes.length; i++) {
+        if (envelopes[i].title === transferFrom) {
+            for (let x = 0; x < envelopes.length; x++) {
+                if (envelopes[x].title === transferTo) {
+                    titleFound = true
+                    let fromNewBudget = envelopes[i].budget - parseInt(transferAmount);
+                    let toNewBudget = envelopes[x].budget + parseInt(transferAmount);
+
+                    envelopes[i].budget = fromNewBudget;
+                    envelopes[x].budget = toNewBudget;
+
+                    res.status(201).json(envelopes);
+                }
+
+            }
+        }
+    }
+
+    if (!titleFound) {
+        res.status(404).json({ error: "'Transfer From or To' Envelope not found!" }); 
+    }
+});
+
+app.put('/envelopes/update/:id', (req, res) => {
     const id = req.params.id;
     let idFound = false;
 
@@ -76,7 +105,7 @@ app.put('/envelopes/:id', (req, res) => {
 });
 
 
-app.delete('/envelopes/:id', (req, res) => {
+app.delete('/envelopes/remove/:id', (req, res) => {
     const id = req.params.id;
     let idFound = false;
 
