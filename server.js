@@ -74,7 +74,7 @@ app.post('/envelopes/transfer/:from/:to', (req, res) => {
     }
 
     if (!titleFound) {
-        res.status(404).json({ error: "'Transfer From or To' Envelope not found!" }); 
+        res.status(401).json({ error: "'Transfer From or To' Envelope not found!" }); 
     }
 });
 
