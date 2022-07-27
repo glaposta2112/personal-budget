@@ -34,9 +34,8 @@ app.post('/envelopes', (req, res) => {
     let title = req.body.title;
     let budget = req.body.budget;
 
-    let id = createId();
-
     if (typeof title === 'string' && typeof budget === 'number') {
+        let id = createId();
         let envelopeObject = {
             id: id,
             title: title,
@@ -48,9 +47,34 @@ app.post('/envelopes', (req, res) => {
     else {
         res.status(401).json({ error: 'Invalid title and\/or budget' });
     }
-
-
 });
+
+app.put('/envelopes/:id', (req, res) => {
+    const id = req.params.id;
+    let idFound = false;
+
+    for (let i = 0; i < envelopes.length; i++) {
+        if (envelopes[i].id.toString() === id) {
+           idFound = true;
+
+           let title = req.body.title;
+           let budget = req.body.budget
+           if (typeof title === "string" && typeof budget === "number") {
+                envelopes[i].title = title;
+                envelopes[i].budget = budget;
+                res.status(200).json(envelopes[i]);
+            }
+            else {
+                res.status(401).json({ error: 'Invalid title and/or budget' });
+            }
+        }
+    }
+
+    if (!idFound) {
+        res.status(404).json({ error: "Envelope not found!" });
+    }    
+});
+
 
 app.delete('/envelopes/:id', (req, res) => {
     const id = req.params.id;
