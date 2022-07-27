@@ -1,4 +1,4 @@
-import { createRandomId, createId } from './helpers/helper_functions.js';
+import { createId } from './helpers/helper_functions.js';
 import express from 'express';
 import bodyParser from 'body-parser';
 const app = express();
@@ -31,7 +31,6 @@ app.get('/envelopes/:id', (req, res) => {
 });
 
 app.post('/envelopes', (req, res) => {
-    let idExists = true;
     let title = req.body.title;
     let budget = req.body.budget;
 
@@ -53,6 +52,22 @@ app.post('/envelopes', (req, res) => {
 
 });
 
+app.delete('/envelopes/:id', (req, res) => {
+    const id = req.params.id;
+    let idFound = false;
+
+    for (let i = 0; i < envelopes.length; i++) {
+        if (envelopes[i].id.toString() === id) {
+           idFound = true;
+           envelopes.splice(i, 1);
+           res.status(200).json({ success: "Envelope has been deleted!" });
+        }
+    }
+
+    if (!idFound) {
+        res.status(404).json({ error: "Envelope not found!" });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
